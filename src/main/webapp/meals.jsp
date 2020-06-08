@@ -1,9 +1,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -30,15 +28,16 @@
 
         <jsp:useBean id="meals" scope="request" type="java.util.List"/>
         <c:forEach var="meal" items="${meals}">
-            <tr class="${meal.isExcess() ? "w3-text-red": "w3-text-green"}">
-                <td>${meal.getId()}</td>
-                <td>${meal.getDateTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))}</td>
-                <td>${meal.getDescription()}</td>
-                <td>${meal.getCalories()}</td>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
+            <tr class="${meal.excess ? "w3-text-red": "w3-text-green"}">
+                <td>${meal.id}</td>
+                <td>${meal.dateTime.format(localDateTimeFormatter)}</td>
+                <td>${meal.description}</td>
+                <td>${meal.calories}</td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/meals?action=edit&mealId=${meal.getId()}"
+                    <a href="${pageContext.request.contextPath}/meals?action=edit&mealId=${meal.id}"
                        class="w3-button w3-round w3-hover-blue material-icons">edit</a>
-                    <a href="${pageContext.request.contextPath}/meals?action=delete&mealId=${meal.getId()}"
+                    <a href="${pageContext.request.contextPath}/meals?action=delete&mealId=${meal.id}"
                        class="w3-button w3-round w3-hover-blue material-icons">delete</a>
                 </td>
             </tr>

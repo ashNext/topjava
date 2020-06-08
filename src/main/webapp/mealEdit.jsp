@@ -30,12 +30,12 @@
                 <p>
                     <label for="DateTime">Date&Time</label>
                     <input class="w3-input" id="DateTime" type="datetime-local" name="dtl"
-                           value="${datetime}">
+                           value="${meal.getDateTime()}">
                     <label for="description">Description</label>
                     <input class="w3-input" id="description" type="text" name="descr"
-                           value="${description}">
+                           value="${meal.getDescription()}">
                     <label for="calories">Calories</label>
-                    <input class="w3-input" id="calories" type="number" name="cal" value="${calories}">
+                    <input class="w3-input" id="calories" type="number" name="cal" value="${meal.getCalories()}">
                 </p>
                 <p>
                     <input class="w3-button w3-hover-gray w3-round" type="submit" value="${isEdit ? "Save": "Add"}">
