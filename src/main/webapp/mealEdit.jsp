@@ -13,17 +13,9 @@
 
         <div>
             <p>
-                ${isEdit ? "Edit meal": "New meal"}
+                ${param.containsKey("mealId") ? "Edit meal": "New meal"}
             </p>
         </div>
-
-        <c:if test="${errText!=null}">
-            <div class="w3-panel w3-red w3-display-container">
-                <span onclick="this.parentElement.style.display='none'"
-                      class="w3-button w3-red w3-large w3-display-topright">x</span>
-                <p>${errText}</p>
-            </div>
-        </c:if>
 
         <div>
             <form class="w3-container" method="post">
@@ -38,7 +30,7 @@
                     <input class="w3-input" id="calories" type="number" name="cal" value="${meal.getCalories()}">
                 </p>
                 <p>
-                    <input class="w3-button w3-hover-gray w3-round" type="submit" value="${isEdit ? "Save": "Add"}">
+                    <input class="w3-button w3-hover-gray w3-round" type="submit" value="${param.containsKey("mealId") ? "Save": "Add"}">
                     <a class="w3-button w3-hover-gray w3-round"
                        href="${pageContext.request.contextPath}/meals">Cancel</a>
                 </p>

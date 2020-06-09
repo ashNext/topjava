@@ -16,10 +16,9 @@
         meal</a>
 </div>
 
-<div class="w3-responsive">
+<div class="w3-container w3-responsive">
     <table class="w3-table-all w3-hoverable">
         <tr>
-            <th>Id</th>
             <th>DateTime</th>
             <th>Description</th>
             <th>Calories</th>
@@ -30,7 +29,6 @@
         <c:forEach var="meal" items="${meals}">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
             <tr class="${meal.excess ? "w3-text-red": "w3-text-green"}">
-                <td>${meal.id}</td>
                 <td>${meal.dateTime.format(localDateTimeFormatter)}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>

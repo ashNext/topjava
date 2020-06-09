@@ -2,9 +2,10 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.MealDao;
-import ru.javawebinar.topjava.dao.MealDaoImpl;
+import ru.javawebinar.topjava.dao.MealDaoImplInternalStorage;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.TimeUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,11 +18,13 @@ import java.time.LocalDateTime;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
-    private static final Logger log = getLogger(UserServlet.class);
+    private static final Logger log = getLogger(MealServlet.class);
     private MealDao mealDao;
 
-    public MealServlet() {
-        mealDao = new MealDaoImpl();
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        mealDao = new MealDaoImplInternalStorage();
     }
 
     @Override
@@ -38,18 +41,16 @@ public class MealServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/meals");
                 return;
             } else if (action.equalsIgnoreCase("edit")) {
-                req.setAttribute("isEdit", true);
                 Long mealId = Long.parseLong(req.getParameter("mealId"));
                 Meal meal = mealDao.getById(mealId);
                 req.setAttribute("meal", meal);
                 forward = "/mealEdit.jsp";
             } else if (action.equalsIgnoreCase("new")) {
-                req.setAttribute("isEdit", false);
                 forward = "/mealEdit.jsp";
             }
         }
 
-        req.setAttribute("localDateTimeFormatter", MealsUtil.getDateTimeFormatter());
+        req.setAttribute("localDateTimeFormatter", TimeUtil.DATE_TIME_FORMATTER);
         req.setAttribute("meals", MealsUtil.allToDTO(mealDao.getAll()));
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
@@ -59,19 +60,19 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        String dtl = req.getParameter("dtl");
-        String descr = req.getParameter("descr");
-        String cal = req.getParameter("cal");
-        if (dtl != null && !dtl.isEmpty() && descr != null && !descr.isEmpty() && cal != null && !cal.isEmpty()) {
-            log.debug(String.format("dtl='%s', descr='%s', cal='%s'", dtl, descr, cal));
-            LocalDateTime dateTime = LocalDateTime.parse(dtl);
-            int calories = Integer.parseInt(cal);
+        String paramDateTime = req.getParameter("dtl");
+        String paramDescription = req.getParameter("descr");
+        String paramCalories = req.getParameter("cal");
+        String paramMealId = req.getParameter("mealId");
+        if (paramDateTime != null && !paramDateTime.isEmpty() && paramDescription != null && !paramDescription.isEmpty() && paramCalories != null && !paramCalories.isEmpty()) {
+            log.debug(String.format("DateTime='%s', Description='%s', Calories='%s'", paramDateTime, paramDescription, paramCalories));
+            LocalDateTime dateTime = LocalDateTime.parse(paramDateTime);
+            int calories = Integer.parseInt(paramCalories);
 
-            Meal meal = new Meal(dateTime, descr, calories);
+            Meal meal = new Meal(dateTime, paramDescription, calories);
 
-            String id = req.getParameter("mealId");
-            if (id != null && !id.isEmpty()) {
-                meal.setId(Long.parseLong(id));
+            if (paramMealId != null && !paramMealId.isEmpty()) {
+                meal.setId(Long.parseLong(paramMealId));
                 mealDao.update(meal);
             } else {
                 mealDao.add(meal);
@@ -79,11 +80,7 @@ public class MealServlet extends HttpServlet {
 
             resp.sendRedirect(req.getContextPath() + "/meals");
         } else {
-            req.setAttribute("errText", "Fields must not be empty!");
-            req.setAttribute("datetime", dtl);
-            req.setAttribute("description", descr);
-            req.setAttribute("calories", cal);
-            req.getRequestDispatcher("/mealEdit.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/meals?action=" + req.getParameter("action") + (paramMealId != null ? "&mealId=" + paramMealId : ""));
         }
     }
 }
