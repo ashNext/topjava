@@ -23,7 +23,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        super.init();
         mealDao = new MealDaoImplInternalStorage();
     }
 
@@ -48,10 +47,10 @@ public class MealServlet extends HttpServlet {
             } else if (action.equalsIgnoreCase("new")) {
                 forward = "/mealEdit.jsp";
             }
+        } else {
+            req.setAttribute("localDateTimeFormatter", TimeUtil.DATE_TIME_FORMATTER);
+            req.setAttribute("meals", MealsUtil.allToDTO(mealDao.getAll()));
         }
-
-        req.setAttribute("localDateTimeFormatter", TimeUtil.DATE_TIME_FORMATTER);
-        req.setAttribute("meals", MealsUtil.allToDTO(mealDao.getAll()));
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
         requestDispatcher.forward(req, resp);

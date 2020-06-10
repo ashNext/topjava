@@ -13,16 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class MealDaoImplInternalStorage implements MealDao {
 
-    private static final Map<Long, Meal> mealMap = new ConcurrentHashMap<>();
+    private final Map<Long, Meal> mealMap = new ConcurrentHashMap<>();
 
-    private static AtomicLong counter = new AtomicLong();
-
-    static {
-        for (Meal meal : preparedList()) {
-            meal.setId(counter.getAndIncrement());
-            mealMap.put(meal.getId(), meal);
-        }
-    }
+    private AtomicLong counter = new AtomicLong();
 
     private static List<Meal> preparedList() {
         return Arrays.asList(
@@ -40,11 +33,16 @@ public class MealDaoImplInternalStorage implements MealDao {
         );
     }
 
+    public MealDaoImplInternalStorage() {
+        for (Meal meal : preparedList()) {
+            add(meal);
+        }
+    }
+
     @Override
     public Meal add(Meal meal) {
-        Long newId = counter.getAndIncrement();
-        meal.setId(newId);
-        return mealMap.putIfAbsent(newId, meal);
+        meal.setId(counter.getAndIncrement());
+        return mealMap.put(meal.getId(), meal);
     }
 
     @Override
