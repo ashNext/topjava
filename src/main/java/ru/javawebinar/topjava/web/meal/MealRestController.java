@@ -18,8 +18,11 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 @Controller
 public class MealRestController {
 
-    @Autowired
     private MealService service;
+
+    public MealRestController(MealService service) {
+        this.service = service;
+    }
 
     public List<MealTo> getAll() {
         return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
