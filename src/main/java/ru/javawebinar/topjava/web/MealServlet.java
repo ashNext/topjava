@@ -43,7 +43,6 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
 
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                SecurityUtil.authUserId(),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
@@ -73,7 +72,7 @@ public class MealServlet extends HttpServlet {
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
-                        new Meal(SecurityUtil.authUserId(), LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
+                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
                         controller.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
@@ -84,11 +83,11 @@ public class MealServlet extends HttpServlet {
                 String paramDateEnd = getParamAndSetAttribute(request, "dateEnd");
                 String paramTimeStart = getParamAndSetAttribute(request, "timeStart");
                 String paramTimeEnd = getParamAndSetAttribute(request, "timeEnd");
-                request.setAttribute("meals", controller.getMeals(
+                request.setAttribute("meals", controller.getFilteredBetweenDate(
                         (paramDateStart != null && !paramDateStart.isEmpty()) ? LocalDate.parse(paramDateStart) : null,
-                        (paramTimeStart != null && !paramTimeStart.isEmpty()) ? LocalTime.parse(paramTimeStart) : LocalTime.MIN,
+                        (paramTimeStart != null && !paramTimeStart.isEmpty()) ? LocalTime.parse(paramTimeStart) : null,
                         (paramDateEnd != null && !paramDateEnd.isEmpty()) ? LocalDate.parse(paramDateEnd) : null,
-                        (paramTimeEnd != null && !paramTimeEnd.isEmpty()) ? LocalTime.parse(paramTimeEnd) : LocalTime.MAX));
+                        (paramTimeEnd != null && !paramTimeEnd.isEmpty()) ? LocalTime.parse(paramTimeEnd) : null));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":

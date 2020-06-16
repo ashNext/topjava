@@ -17,6 +17,13 @@ public class SpringMain {
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ADMIN));
+            adminUserController.create(new User(null, "A", "d@mail.ru", "password", Role.ADMIN));
+            adminUserController.create(new User(null, "B", "c@mail.ru", "password", Role.ADMIN));
+            adminUserController.create(new User(null, "A", "b@mail.ru", "password", Role.ADMIN));
+            adminUserController.create(new User(null, "C", "a@mail.ru", "password", Role.ADMIN));
+            adminUserController.create(new User(null, "a", "1@mail.ru", "password", Role.ADMIN));
+            System.out.println("Users:");
+            adminUserController.getAll().forEach(System.out::println);
             MealRestController mealRestController=appCtx.getBean(MealRestController.class);
             System.out.println("getAll:");
             mealRestController.getAll().forEach(System.out::println);

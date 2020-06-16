@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -28,12 +27,12 @@ public class MealRestController {
         return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public List<MealTo> getMeals(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<MealTo> getFilteredBetweenDate(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         return MealsUtil.getFilteredTos(
-                service.getMeals(startDate, endDate, SecurityUtil.authUserId()),
+                service.getFilteredBetweenDate(startDate, endDate, SecurityUtil.authUserId()),
                 SecurityUtil.authUserCaloriesPerDay(),
-                startTime,
-                endTime);
+                startTime == null ? LocalTime.MIN : startTime,
+                endTime == null ? LocalTime.MAX : endTime);
     }
 
     public Meal get(int id) {
