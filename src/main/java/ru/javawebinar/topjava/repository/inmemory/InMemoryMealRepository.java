@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
-    private Map<Integer, HashMap<Integer, Meal>> repository = new ConcurrentHashMap<>();
+    private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
@@ -28,8 +29,11 @@ public class InMemoryMealRepository implements MealRepository {
     public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.putIfAbsent(userId, new HashMap<>());
-            repository.get(userId).put(meal.getId(), meal);
+            repository.compute(userId, (k, v) -> {
+                Map<Integer, Meal> m = v == null ? new HashMap<>() : v;
+                m.put(meal.getId(), meal);
+                return m;
+            });
             return meal;
         }
         // handle case: update, but not present in storage
@@ -43,7 +47,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        HashMap<Integer, Meal> mealsUser = repository.get(userId);
+        Map<Integer, Meal> mealsUser = repository.get(userId);
         return (mealsUser != null && mealsUser.get(id) != null ? mealsUser.get(id) : null);
     }
 
@@ -59,11 +63,11 @@ public class InMemoryMealRepository implements MealRepository {
 
     private List<Meal> getFilteredByPredicate(int userId, Predicate<Meal> filter) {
         //если у пользователя еда ещё ниразу не была добавлена, то инициализируем ему пустую мапу
-        repository.putIfAbsent(userId, new HashMap<>());
-        return repository.get(userId).values().stream()
-                .filter(filter)
-                .sorted((a, b) -> b.getDateTime().compareTo(a.getDateTime()))
-                .collect(Collectors.toList());
+        return repository.get(userId) == null ?
+                Collections.emptyList() :
+                repository.get(userId).values().stream()
+                        .filter(filter)
+                        .sorted((a, b) -> b.getDateTime().compareTo(a.getDateTime()))
+                        .collect(Collectors.toList());
     }
 }
-

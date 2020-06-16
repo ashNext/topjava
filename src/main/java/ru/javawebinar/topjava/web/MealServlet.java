@@ -79,10 +79,10 @@ public class MealServlet extends HttpServlet {
                 break;
             case "filter":
                 log.info("getFiltered");
-                String paramDateStart = getParamAndSetAttribute(request, "dateStart");
-                String paramDateEnd = getParamAndSetAttribute(request, "dateEnd");
-                String paramTimeStart = getParamAndSetAttribute(request, "timeStart");
-                String paramTimeEnd = getParamAndSetAttribute(request, "timeEnd");
+                String paramDateStart =  request.getParameter( "dateStart");
+                String paramDateEnd =  request.getParameter( "dateEnd");
+                String paramTimeStart =  request.getParameter( "timeStart");
+                String paramTimeEnd =  request.getParameter("timeEnd");
                 request.setAttribute("meals", controller.getFilteredBetweenDate(
                         (paramDateStart != null && !paramDateStart.isEmpty()) ? LocalDate.parse(paramDateStart) : null,
                         (paramTimeStart != null && !paramTimeStart.isEmpty()) ? LocalTime.parse(paramTimeStart) : null,
@@ -97,14 +97,6 @@ public class MealServlet extends HttpServlet {
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
-    }
-
-    private String getParamAndSetAttribute(HttpServletRequest request, String name) {
-        String param = request.getParameter(name);
-        if (param != null && !param.isEmpty()) {
-            request.setAttribute(name, param);
-        }
-        return param;
     }
 
     private int getId(HttpServletRequest request) {

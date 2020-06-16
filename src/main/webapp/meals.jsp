@@ -26,13 +26,13 @@
         <input type="hidden" value="filter" name="action">
         <dl>
             <dt>Date start:</dt>
-            <dd><input type="date" value="${dateStart}" name="dateStart"></dd>
+            <dd><input type="date" value="${param.get("dateStart")}" name="dateStart"></dd>
             <dt>Date end:</dt>
-            <dd><input type="date" value="${dateEnd}" name="dateEnd"></dd>
+            <dd><input type="date" value="${param.get("dateEnd")}" name="dateEnd"></dd>
             <dt>Time start:</dt>
-            <dd><input type="time" value="${timeStart}" name="timeStart"></dd>
+            <dd><input type="time" value="${param.get("timeStart")}" name="timeStart"></dd>
             <dt>Time end:</dt>
-            <dd><input type="time" value="${timeEnd}" name="timeEnd"></dd>
+            <dd><input type="time" value="${param.get("timeEnd")}" name="timeEnd"></dd>
         </dl>
         <button type="submit">Filter</button>
     </form>
