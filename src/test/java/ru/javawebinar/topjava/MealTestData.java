@@ -27,7 +27,7 @@ public class MealTestData {
     public static final Meal MEAL_09_U = new Meal(mealId++, LocalDateTime.of(2020, Month.JUNE, 22, 14, 0, 0), "Обед", 700);
     public static final Meal MEAL_10_U = new Meal(mealId++, LocalDateTime.of(2020, Month.JUNE, 22, 20, 0, 0), "Ужин", 500);
 
-    public static final List<Meal> MEALS_LIST_ALL_U=Arrays.asList(MEAL_10_U, MEAL_09_U, MEAL_08_U, MEAL_07_U, MEAL_06_U, MEAL_05_U, MEAL_04_U, MEAL_03_U, MEAL_02_U, MEAL_01_U);
+    public static final List<Meal> MEALS_LIST_ALL_U = Arrays.asList(MEAL_10_U, MEAL_09_U, MEAL_08_U, MEAL_07_U, MEAL_06_U, MEAL_05_U, MEAL_04_U, MEAL_03_U, MEAL_02_U, MEAL_01_U);
 
     public static final Meal MEAL_01_A = new Meal(mealId++, LocalDateTime.of(2020, Month.JUNE, 20, 7, 40, 0), "Завтрак", 600);
     public static final Meal MEAL_02_A = new Meal(mealId++, LocalDateTime.of(2020, Month.JUNE, 20, 12, 0, 0), "Ланч", 100);
@@ -43,13 +43,13 @@ public class MealTestData {
 
     public static final LocalDate START_DATE_BETWEEN_U = LocalDate.of(2020, Month.JUNE, 21);
     public static final LocalDate END_DATE_BETWEEN_U = LocalDate.of(2020, Month.JUNE, 22);
-    public static final List<Meal> MEALS_LIST_BETWEEN_DATE_U=Arrays.asList(MEAL_10_U, MEAL_09_U, MEAL_08_U, MEAL_07_U, MEAL_06_U, MEAL_05_U, MEAL_04_U);
+    public static final List<Meal> MEALS_LIST_BETWEEN_DATE_U = Arrays.asList(MEAL_10_U, MEAL_09_U, MEAL_08_U, MEAL_07_U, MEAL_06_U, MEAL_05_U, MEAL_04_U);
 
     public static final LocalDate FROM_DATE_BETWEEN_A = LocalDate.of(2020, Month.JUNE, 21);
-    public static final List<Meal> MEALS_LIST_FROM_DATE_A=Arrays.asList(MEAL_11_A, MEAL_10_A, MEAL_09_A, MEAL_08_A, MEAL_07_A, MEAL_06_A, MEAL_05_A);
+    public static final List<Meal> MEALS_LIST_FROM_DATE_A = Arrays.asList(MEAL_11_A, MEAL_10_A, MEAL_09_A, MEAL_08_A, MEAL_07_A, MEAL_06_A, MEAL_05_A);
 
     public static final LocalDate TO_DATE_BETWEEN_A = LocalDate.of(2020, Month.JUNE, 21);
-    public static final List<Meal> MEALS_LIST_TO_DATE_A=Arrays.asList(MEAL_07_A, MEAL_06_A, MEAL_05_A, MEAL_04_A, MEAL_03_A, MEAL_02_A, MEAL_01_A);
+    public static final List<Meal> MEALS_LIST_TO_DATE_A = Arrays.asList(MEAL_07_A, MEAL_06_A, MEAL_05_A, MEAL_04_A, MEAL_03_A, MEAL_02_A, MEAL_01_A);
 
     public static Meal getNew() {
         return new Meal(null, LocalDateTime.of(2020, Month.JUNE, 22, 22, 22, 22), "Новая еда (2)", 222);
@@ -63,7 +63,7 @@ public class MealTestData {
     }
 
     public static void assertMatch(Meal actual, Meal expected) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualToComparingFieldByField(expected);
     }
 
     public static void assertMatch(Iterable<Meal> actual, Meal... expected) {
@@ -71,7 +71,7 @@ public class MealTestData {
     }
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).usingFieldByFieldElementComparator().isEqualTo(expected);
     }
 
 }
