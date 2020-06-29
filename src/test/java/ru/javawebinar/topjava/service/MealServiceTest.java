@@ -3,8 +3,7 @@ package ru.javawebinar.topjava.service;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.rules.TestWatcher;
+import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
@@ -35,31 +36,22 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
-    private static final Map<String, Long> durationTests = new HashMap<>();
+    private static final Map<String, Double> durationTests = new HashMap<>();
 
     @Rule
-    public final TestRule watchman = new TestWatcher() {
-        private long startTime;
-
+    public final Stopwatch stopwatch = new Stopwatch() {
         @Override
-        protected void starting(Description description) {
-            startTime = System.currentTimeMillis();
-            super.starting(description);
-        }
-
-        @Override
-        protected void finished(Description description) {
-            long duration = System.currentTimeMillis() - startTime;
+        protected void finished(long nanos, Description description) {
+            double duration = BigDecimal.valueOf(nanos / 1000000.0).setScale(3, RoundingMode.HALF_UP).doubleValue();
             durationTests.put(description.getMethodName(), duration);
             log.info("{} method execution time: {}ms", description.getMethodName(), duration);
-            super.finished(description);
+            super.finished(nanos, description);
         }
     };
 
     @AfterClass
     public static void endTests() {
-        System.out.println("Test duration:");
-        durationTests.forEach((k, v) -> System.out.println(String.format("\t%s - %dms", k, v)));
+        durationTests.forEach((k, v) -> log.info(String.format("%-30s%.3fms", k, v)));
     }
 
     @Autowired
