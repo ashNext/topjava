@@ -16,12 +16,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -36,22 +35,23 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
-    private static final Map<String, Double> durationTests = new HashMap<>();
+    private static final Map<String, Long> durationTests = new HashMap<>();
 
     @Rule
     public final Stopwatch stopwatch = new Stopwatch() {
         @Override
         protected void finished(long nanos, Description description) {
-            double duration = BigDecimal.valueOf(nanos / 1000000.0).setScale(3, RoundingMode.HALF_UP).doubleValue();
+            Long duration = TimeUnit.NANOSECONDS.toMillis(nanos);
             durationTests.put(description.getMethodName(), duration);
             log.info("{} method execution time: {}ms", description.getMethodName(), duration);
-            super.finished(nanos, description);
         }
     };
 
     @AfterClass
     public static void endTests() {
-        durationTests.forEach((k, v) -> log.info(String.format("%-30s%.3fms", k, v)));
+        StringBuilder stringBuilder = new StringBuilder();
+        durationTests.forEach((k, v) -> stringBuilder.append(String.format("%-30s%dms\n", k, v)));
+        log.info(stringBuilder.toString());
     }
 
     @Autowired
