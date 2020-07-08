@@ -17,7 +17,7 @@ public class SpringMain {
     public static void main(String[] args) {
         // java 7 automatic resource management
         try (ClassPathXmlApplicationContext appCtx = new ClassPathXmlApplicationContext()) {
-            appCtx.getEnvironment().setActiveProfiles("postgres", Profiles.DATAJPA);
+            appCtx.getEnvironment().setActiveProfiles(Profiles.getActiveDbProfile(), Profiles.DATAJPA);
             appCtx.setConfigLocations("spring/spring-app.xml", "spring/spring-db.xml");
             appCtx.refresh();
 
