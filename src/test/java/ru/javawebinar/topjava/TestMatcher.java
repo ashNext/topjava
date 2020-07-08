@@ -19,10 +19,6 @@ public class TestMatcher<T> {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, fieldsToIgnore);
     }
 
-    public void assertMatchFieldByField(T actual, T expected) {
-        assertThat(actual).isEqualToComparingFieldByField(expected);
-    }
-
     public void assertMatch(Iterable<T> actual, T... expected) {
         assertMatch(actual, List.of(expected));
     }

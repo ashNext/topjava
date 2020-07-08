@@ -37,7 +37,7 @@ public class UserService {
     }
 
     public User getWithMeals(int id){
-        return repository.getWithMeals(id);
+        return checkNotFoundWithId(repository.getWithMeals(id), id);
     }
 
     public User getByEmail(String email) {

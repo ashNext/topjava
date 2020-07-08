@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.Profiles;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Profile(Profiles.HSQL_DB)
@@ -18,7 +19,7 @@ public class JdbcMealRepositoryHsqldb extends JdbcMealRepository {
     }
 
     @Override
-    <T> T getDateTime(LocalDateTime dateTime) {
-        return (T) java.sql.Timestamp.valueOf(dateTime);
+    public Timestamp getDateTime(LocalDateTime dateTime) {
+        return java.sql.Timestamp.valueOf(dateTime);
     }
 }
