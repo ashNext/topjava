@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Profile(Profiles.HSQL_DB)
 @Repository
-public class JdbcMealRepositoryHsqldb extends JdbcMealRepository {
+public class JdbcMealRepositoryHsqldb extends JdbcMealRepository<Timestamp> {
     @Autowired
     public JdbcMealRepositoryHsqldb(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(jdbcTemplate, namedParameterJdbcTemplate);
@@ -20,6 +20,6 @@ public class JdbcMealRepositoryHsqldb extends JdbcMealRepository {
 
     @Override
     public Timestamp getDateTime(LocalDateTime dateTime) {
-        return java.sql.Timestamp.valueOf(dateTime);
+        return Timestamp.valueOf(dateTime);
     }
 }

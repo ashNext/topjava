@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Profile(Profiles.POSTGRES_DB)
 @Repository
-public class JdbcMealRepositoryPostgres extends JdbcMealRepository {
+public class JdbcMealRepositoryPostgres extends JdbcMealRepository<LocalDateTime> {
     @Autowired
     public JdbcMealRepositoryPostgres(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(jdbcTemplate, namedParameterJdbcTemplate);
