@@ -83,6 +83,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(@PositiveOrZero int id) {
         return jdbcTemplate.update("DELETE FROM users WHERE id=?", id) != 0;
     }

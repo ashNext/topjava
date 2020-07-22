@@ -28,10 +28,7 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping(value = "/filter")
-    public String getBetween(
-            Model model,
-            HttpServletRequest request
-    ) {
+    public String getBetween(Model model, HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
@@ -47,7 +44,7 @@ public class JspMealController extends AbstractMealController {
         return "redirect:/meals";
     }
 
-    @GetMapping("/mealForm")
+    @GetMapping("/meal-form")
     public String mealForm(
             @RequestParam(value = "id", required = false) Integer id,
             Model model) {
@@ -61,17 +58,14 @@ public class JspMealController extends AbstractMealController {
         return "mealForm";
     }
 
-    @PostMapping("/mealForm")
+    @PostMapping
     public String save(
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam("dateTime") String dateTime,
             @RequestParam("description") String description,
             @RequestParam("calories") int calories
     ) {
-        Meal meal = new Meal(
-                LocalDateTime.parse(dateTime),
-                description,
-                calories);
+        Meal meal = new Meal(LocalDateTime.parse(dateTime), description, calories);
         if (id == null)
             super.create(meal);
         else
