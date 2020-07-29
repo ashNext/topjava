@@ -1,29 +1,17 @@
 ### All
-GET http://localhost:8080/topjava/rest/meals
+curl http://localhost:8080/topjava/rest/meals
 
 ### Get
-GET http://localhost:8080/topjava/rest/meals/100007
+curl http://localhost:8080/topjava/rest/meals/100007
 
 ### getBetween
-GET http://localhost:8080/topjava/rest/meals/filter?startDate=2020-01-31T10:00:00&startTime=&endDate=&endTime=
+curl http://localhost:8080/topjava/rest/meals/filter?startDate=2020-01-31
+
+### Delete
+curl -X DELETE http://localhost:8080/topjava/rest/meals/100007
 
 ### Create
-POST http://localhost:8080/topjava/rest/meals
-Content-Type: application/json
-
-{
-  "dateTime": "2020-01-31T12:12:12",
-  "description": "Ланч",
-  "calories": 777
-}
+curl -X POST -H "Content-Type: application/json" -d '{"dateTime": "2020-01-31T12:12:12","description": "Ланч","calories": "777"}' http://localhost:8080/topjava/rest/meals
 
 ### Update
-PUT http://localhost:8080/topjava/rest/meals/100007
-Content-Type: application/json
-
-{
-  "id": 100007,
-  "dateTime": "2020-01-31T14:00:00",
-  "description": "Обед",
-  "calories": 2000
-}
+curl -X PUT -H "Content-Type: application/json" -d '{"dateTime": "2020-01-31T15:15:15","description": "Ужин01","calories": "100"}' http://localhost:8080/topjava/rest/meals/100008
