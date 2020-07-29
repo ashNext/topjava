@@ -7,16 +7,21 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.readFromJson;
+import static ru.javawebinar.topjava.TestUtil.readListFromJsonMvcResult;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 class MealRestControllerTest extends AbstractControllerTest {
@@ -32,7 +37,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEALTO_MATCHER.contentJson(MEALS_TO));
+                .andExpect(result -> assertEquals(readListFromJsonMvcResult(result, MealTo.class), MEALS_TO));
     }
 
     @Test
@@ -89,7 +94,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEALTO_MATCHER.contentJson(MEALS_TO.get(5), MEALS_TO.get(6)));
+                .andExpect(result -> assertEquals(readListFromJsonMvcResult(result, MealTo.class), List.of(MEALS_TO.get(5), MEALS_TO.get(6))));
     }
 
     @Test
@@ -100,7 +105,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEALTO_MATCHER.contentJson(MEALS_TO));
+                .andExpect(result -> assertEquals(readListFromJsonMvcResult(result, MealTo.class), MEALS_TO));
     }
 
     @Test
@@ -110,7 +115,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEALTO_MATCHER.contentJson(MEALS_TO));
+                .andExpect(result -> assertEquals(readListFromJsonMvcResult(result, MealTo.class), MEALS_TO));
     }
 
 }
