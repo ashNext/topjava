@@ -13,25 +13,37 @@
     <div class="container">
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
         <div class="container">
-            <form method="get" action="meals/filter">
-                <dl>
-                    <dt><spring:message code="meal.startDate"/>:</dt>
-                    <dd><input type="text" name="startDate" value="${param.startDate}" id="startDate"></dd>
-                </dl>
-                <dl>
-                    <dt><spring:message code="meal.endDate"/>:</dt>
-                    <dd><input type="text" name="endDate" value="${param.endDate}" id="endDate"></dd>
-                </dl>
-                <dl>
-                    <dt><spring:message code="meal.startTime"/>:</dt>
-                    <dd><input type="text" name="startTime" value="${param.startTime}" id="startTime"></dd>
-                </dl>
-                <dl>
-                    <dt><spring:message code="meal.endTime"/>:</dt>
-                    <dd><input type="text" name="endTime" value="${param.endTime}" id="endTime"></dd>
-                </dl>
-                <button type="submit"><spring:message code="meal.filter"/></button>
-            </form>
+            <div class="container">
+<%--                <form method="get" action="meals/filter" id="filter">--%>
+                <form id="filter">
+                    <dl>
+                        <dt><spring:message code="meal.startDate"/>:</dt>
+                        <dd><input type="text" name="startDate" value="${param.startDate}" id="startDate"></dd>
+                    </dl>
+                    <dl>
+                        <dt><spring:message code="meal.endDate"/>:</dt>
+                        <dd><input type="text" name="endDate" value="${param.endDate}" id="endDate"></dd>
+                    </dl>
+                    <dl>
+                        <dt><spring:message code="meal.startTime"/>:</dt>
+                        <dd><input type="text" name="startTime" value="${param.startTime}" id="startTime"></dd>
+                    </dl>
+                    <dl>
+                        <dt><spring:message code="meal.endTime"/>:</dt>
+                        <dd><input type="text" name="endTime" value="${param.endTime}" id="endTime"></dd>
+                    </dl>
+                </form>
+            </div>
+            <div class="container">
+                <button class="btn btn-primary" onclick="filterData()">
+                    <span class="fa fa-filter"></span>
+                    <spring:message code="meal.filter"/>
+                </button>
+                <button class="btn btn-danger" onclick="resetFilter()">
+                    <span class="fa fa-remove"></span>
+                    <spring:message code="meal.resetFilter"/>
+                </button>
+            </div>
         </div>
         <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>

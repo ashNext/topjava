@@ -1,3 +1,25 @@
+function resetFilter() {
+    $("#filter")[0].reset();
+    $.get(context.ajaxUrl, filterData)
+}
+
+function filterData() {
+    $.ajax({
+        url: context.ajaxUrl+"filter",
+        type: "GET",
+        data: $("#filter").serialize(),
+    })
+        .done(refreshTable)
+}
+
+function updateTable() {
+    filterData();
+}
+
+function refreshTable(data) {
+    context.datatableApi.clear().rows.add(data).draw();
+}
+
 $(function () {
     makeEditable({
             ajaxUrl: "profile/meals/",
