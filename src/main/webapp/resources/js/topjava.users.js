@@ -4,6 +4,18 @@ function updateTable() {
     });
 }
 
+function switchEnable(obj) {
+    let id = obj.closest("tr").attr("id");
+    let checked = obj.prop('checked');
+    $.ajax({
+        url: context.ajaxUrl + id,
+        type: "POST",
+        data: "enabled=" + checked
+    }).done(function () {
+        obj.closest("tr").attr("data-userEnabled", checked);
+    })
+}
+
 // $(document).ready(function () {
 $(function () {
     makeEditable({
@@ -41,8 +53,11 @@ $(function () {
                         0,
                         "asc"
                     ]
-                ]
+                ],
             })
         }
     );
+    $(".enable").click(function () {
+        switchEnable($(this));
+    });
 });
