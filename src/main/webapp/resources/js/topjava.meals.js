@@ -16,10 +16,6 @@ function updateTable() {
     filterData();
 }
 
-function refreshTable(data) {
-    context.datatableApi.clear().rows.add(data).draw();
-}
-
 $(function () {
     makeEditable({
             ajaxUrl: "profile/meals/",

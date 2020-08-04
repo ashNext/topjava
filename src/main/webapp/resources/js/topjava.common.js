@@ -17,6 +17,10 @@ function makeEditable(ctx) {
     $.ajaxSetup({cache: false});
 }
 
+function refreshTable(data) {
+    context.datatableApi.clear().rows.add(data).draw();
+}
+
 function add() {
     form.find(":input").val("");
     $("#editRow").modal();

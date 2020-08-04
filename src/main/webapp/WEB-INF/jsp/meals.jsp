@@ -14,7 +14,6 @@
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
         <div class="container">
             <div class="container">
-<%--                <form method="get" action="meals/filter" id="filter">--%>
                 <form id="filter">
                     <dl>
                         <dt><spring:message code="meal.startDate"/>:</dt>

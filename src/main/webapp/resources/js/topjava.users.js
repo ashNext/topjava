@@ -1,7 +1,5 @@
 function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
-        context.datatableApi.clear().rows.add(data).draw();
-    });
+    $.get(context.ajaxUrl, refreshTable);
 }
 
 function switchEnable(obj) {
@@ -13,7 +11,10 @@ function switchEnable(obj) {
         data: "enabled=" + checked
     }).done(function () {
         obj.closest("tr").attr("data-userEnabled", checked);
-    })
+        successNoty("User is " + (checked ? "activated" : "deactivated"));
+    }).fail(function () {
+        obj.prop('checked', !checked);
+    });
 }
 
 // $(document).ready(function () {

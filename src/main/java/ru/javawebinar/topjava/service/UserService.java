@@ -62,6 +62,6 @@ public class UserService {
     public void setEnable(int id, boolean enable){
         User user = get(id);
         user.setEnabled(enable);
-        update(user);
+        checkNotFoundWithId(repository.save(user), id);
     }
 }
