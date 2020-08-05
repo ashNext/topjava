@@ -2,16 +2,20 @@ package ru.javawebinar.topjava.web.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,6 +30,9 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private Environment environment;
 
     @Test
     void get() throws Exception {
@@ -89,15 +96,31 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getWithMeals() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID + "/with-meals"))
-                .andExpect(status().isOk())
+
+        if (Arrays.asList(environment.getActiveProfiles()).contains(Profiles.DATAJPA)) {
+            perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID + "/with-meals"))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                    .andExpect(USER_MATCHER.contentJson(ADMIN))
+                    .andExpect(
+                            mvcResult -> MealTestData.MEAL_MATCHER.assertMatch(
+                                    TestUtil.readFromJsonMvcResult(mvcResult, User.class).getMeals(),
+                                    MealTestData.ADMIN_MEAL2, MealTestData.ADMIN_MEAL1));
+        } else
+            assertThrows(UnsupportedOperationException.class, () -> userService.getWithMeals(ADMIN_ID));
+    }
+
+
+    @Test
+    void setEnable() throws Exception {
+        User user = new User(USER);
+        user.setEnabled(false);
+
+        perform(MockMvcRequestBuilders.post(REST_URL + USER_ID).param("enable", "false"))
                 .andDo(print())
-                // https://jira.spring.io/browse/SPR-14472
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(ADMIN))
-                .andExpect(
-                        mvcResult -> MealTestData.MEAL_MATCHER.assertMatch(
-                                TestUtil.readFromJsonMvcResult(mvcResult, User.class).getMeals(),
-                                MealTestData.ADMIN_MEAL2, MealTestData.ADMIN_MEAL1));
+                .andExpect(status().isNoContent());
+
+        USER_MATCHER.assertMatch(userService.get(USER_ID), user);
     }
 }
