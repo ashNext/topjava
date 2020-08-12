@@ -71,22 +71,42 @@ $(function () {
 
     jQuery('#startDate').datetimepicker({
         timepicker: false,
-        format: 'Y-m-d'
+        format: 'Y-m-d',
+        onShow:function( ct ){
+            this.setOptions({
+                maxDate: jQuery('#endDate').val() ? jQuery('#endDate').val() : false
+            })
+        }
     });
 
     jQuery('#endDate').datetimepicker({
         timepicker: false,
-        format: 'Y-m-d'
+        format: 'Y-m-d',
+        onShow:function( ct ){
+            this.setOptions({
+                minDate: jQuery('#startDate').val() ? jQuery('#startDate').val() : false
+            })
+        }
     });
 
     jQuery('#startTime').datetimepicker({
         datepicker: false,
-        format: 'H:i'
+        format: 'H:i',
+        onShow:function( ct ){
+            this.setOptions({
+                maxTime: jQuery('#endTime').val() ? jQuery('#endTime').val() : false
+            })
+        }
     });
 
     jQuery('#endTime').datetimepicker({
         datepicker: false,
-        format: 'H:i'
+        format: 'H:i',
+        onShow:function( ct ){
+            this.setOptions({
+                minTime: jQuery('#startTime').val() ? jQuery('#startTime').val() : false
+            })
+        }
     });
 
     jQuery('#dateTime').datetimepicker({
