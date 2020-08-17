@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,20 +55,29 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(BindException.class)
+    protected ErrorInfo handleBindException(HttpServletRequest req, BindException e) {
+        return logAndGetErrorInfo(req, e, ValidationUtil.getErrorMessage(e.getBindingResult()), false, VALIDATION_ERROR);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorInfo handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException e) {
-        Exception ex = new Exception(ValidationUtil.getErrorMessage(e.getBindingResult()));
-        return logAndGetErrorInfo(req, ex, false, VALIDATION_ERROR);
+        return logAndGetErrorInfo(req, e, ValidationUtil.getErrorMessage(e.getBindingResult()), false, VALIDATION_ERROR);
     }
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
+        return logAndGetErrorInfo(req, rootCause, rootCause.toString(), logException, errorType);
+    }
+
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Throwable throwable, String message, boolean logException, ErrorType errorType) {
         if (logException) {
-            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
+            log.error(errorType + " at request " + req.getRequestURL(), throwable);
         } else {
-            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
+            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), message);
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, rootCause.toString());
+        return new ErrorInfo(req.getRequestURL(), errorType, message);
     }
 }

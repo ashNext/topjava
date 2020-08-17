@@ -76,12 +76,6 @@ public class ValidationUtil {
         return result;
     }
 
-    public static void checkErrorBinding(BindingResult result) {
-        if (result.hasErrors()) {
-            throw new IllegalRequestDataException(getErrorMessage(result));
-        }
-    }
-
     public static String getErrorMessage(BindingResult result) {
         return result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
